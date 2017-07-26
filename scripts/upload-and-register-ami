@@ -1,0 +1,40 @@
+#/bin/bash
+
+# Upload VMDK to S3
+aws s3 cp ./packer_build/vmware/vyos_vmware_image.vmdk s3://$S3_BACKET_NAME/
+
+cat <<EOF > container.json
+{
+    "Description": "VyOS dev",
+    "Format": "vmdk",
+    "UserBucket": {
+        "S3Bucket": "$S3_BACKET_NAME",
+        "S3Key": "vyos_vmware_image.vmdk"
+    }
+}
+EOF
+
+# Import VMDK as snapshot
+import_task_id=$(aws ec2 import-snapshot --description "VyOS dev" --disk-container file://container.json | jq -r .ImportTaskId)
+echo "ImportTaskId: "$import_task_id
+
+# Waiting for import-snapshot
+snapshot_id=""
+while true
+do
+  result=$(aws ec2 describe-import-snapshot-tasks --import-task-ids $import_task_id)
+  status=$(echo "$result" | jq -r .ImportSnapshotTasks[0].SnapshotTaskDetail.Status)
+  echo "ImportSnapshotTask status: "$status
+  if [ $status = "completed" ]; then
+    snapshot_id=$(echo "$result" | jq -r .ImportSnapshotTasks[0].SnapshotTaskDetail.SnapshotId)
+    echo "SnapshotId: "$snapshot_id
+    break
+  fi
+  sleep 10
+done
+
+aws ec2 register-image --name vyos-dev \
+  --architecture x86_64 \
+  --root-device-name /dev/sda1 \
+  --virtualization-type hvm \
+  --block-device-mappings DeviceName="/dev/sda1",Ebs={SnapshotId=$snapshot_id}

@@ -79,6 +79,22 @@ Run following command after building the QEMU image.
 make vmware
 ```
 
+* AMI
+
+This script uses [AWS CLI](https://aws.amazon.com/cli/) and needs `vmimport` role instructed in [User Guide](http://docs.aws.amazon.com/vm-import/latest/userguide/vmimport-image-import.html).
+
+Setup environment variable for S3 backet.
+
+```
+export S3_BACKET_NAME=my-import-backet
+```
+
+Run following command after building the VMware image.
+
+```
+make ami
+```
+
 # Development process
 
 ## git branches
