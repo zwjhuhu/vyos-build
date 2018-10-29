@@ -39,10 +39,17 @@ RUN echo 'deb http://ftp.debian.org/debian jessie-backports main' | tee -a /etc/
       python3-lxml \
       python3-setuptools \
       python3-nose \
-      python3-coverage \
-    && rm -rf /var/lib/apt/lists/*
+      python3-coverage
 
-#install packer
+# Update live-build
+RUN echo 'deb http://ftp.debian.org/debian stretch main' | tee -a /etc/apt/sources.list.d/stretch.list &&\
+    apt-get update &&\
+    apt-get install -y -t stretch live-build &&\
+    rm -f /etc/apt/sources.list.d/stretch.list &&\
+    apt-get update &&\
+    rm -rf /var/lib/apt/lists/*
+
+# install packer
 RUN export LATEST="$(curl -s https://checkpoint-api.hashicorp.com/v1/check/packer | \
   jq -r -M '.current_version')"; \
   echo "url https://releases.hashicorp.com/packer/"$LATEST"/packer_"$LATEST"_linux_amd64.zip" |\
