@@ -3,4 +3,4 @@
 echo I: Creating kernel symlinks.
 cd /boot
 ln -s initrd.img-* initrd.img
-ln -s vmlinuz-* vmlinuz
+ln -s vmlinuz-4.19.70* vmlinuz

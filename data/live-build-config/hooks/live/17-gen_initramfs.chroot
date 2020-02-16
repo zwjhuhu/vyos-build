@@ -9,4 +9,4 @@ if [ -e /boot/initrd.img-* ]; then
 	rm -f /boot/initrd.img-*
 fi
 
-update-initramfs -c -k `ls /boot | grep vmlinuz- | sed 's/vmlinuz-//g'`
+update-initramfs -c -k `ls /boot | grep vmlinuz-4.19.70 | sed 's/vmlinuz-//g'`
