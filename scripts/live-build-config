@@ -39,7 +39,7 @@ lb config noauto \
         --bootappend-live-failsafe "live components memtest noapic noapm nodma nomce nolapic nomodeset nosmp nosplash vga=normal console=ttyS0,115200 console=tty0 net.ifnames=0 biosdevname=0" \
         --linux-flavours {{kernel_flavor}} \
         --linux-packages linux-image-{{kernel_version}} \
-        --bootloader syslinux,grub-efi \
+        --bootloaders syslinux,grub-efi \
         --binary-images iso-hybrid \
         --debian-installer false \
         --distribution {{distribution}} \
@@ -60,7 +60,9 @@ lb config noauto \
         --backports true \
         --apt-recommends false \
         --apt-options "--yes -oAPT::Default-Release="current" -oAPT::Get::allow-downgrades=true" \
-        --apt-indices false
+        --apt-indices false \
+        --apt-http-proxy http://127.0.0.1:1000 \
+        --apt-ftp-proxy http://127.0.0.1:1000
         "${@}"
 """
 

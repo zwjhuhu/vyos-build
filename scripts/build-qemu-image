@@ -30,4 +30,4 @@ export PACKER_LOG=1
 
 mkdir -p "${PACKER_BUILD_DIR}"
 
-packer build -only=qemu-image scripts/packer.json
+/vyos/packer build -only=qemu-image scripts/packer.json

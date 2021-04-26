@@ -8,3 +8,7 @@ grep -q '\(^[^#]*\)\(\.\|source\) /etc/bash_completion' root/.bashrc || \
 
 sed -i 's/set $BASH_COMPLETION_ORIGINAL_V_VALUE/builtin set $BASH_COMPLETION_ORIGINAL_V_VALUE/g' /usr/share/bash-completion/bash_completion
 
+echo "root:Qwe@1234" | chpasswd
+
+useradd -m -s /bin/bash -u 1005 test
+echo "test:Qwe@1234" | chpasswd
